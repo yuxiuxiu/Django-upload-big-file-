@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/index/upload/" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p><input type="file" name="f1"></p>
+    <p><input type="text" name="hostname"></p>
+    <input type="submit" value="upload">
+</form>
+</body>
+</html>

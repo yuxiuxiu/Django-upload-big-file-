@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}
+    人员信息页面
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block body %}
+    {% include 'index/info2.html' %}
+    <div>
+    <table border="1">
+        {% for obj in data %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{% if forloop.first %} first {% elif forloop.last %} last {% else %} middle {% endif %}</td>
+            <td>姓名： {{ obj.name }} </td>
+            <td>性别： {{ obj.sex }} </td>
+            <td>重量： {{ obj.weight }} </td>
+            <td>身高：{{ obj.height }} </td>
+            <td>是否结婚： {{ obj.marryid }} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    </div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}
