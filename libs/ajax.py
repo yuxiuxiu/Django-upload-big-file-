@@ -12,7 +12,9 @@ def ajax_data(data):
     """
     返回json数据
     """
+    # print('原始data：',data)
     data = simplejson.dumps(data)
+    # print('Jsondata：', data)
     return HttpResponse(data, content_type="application/json")
 
 def ajax_template(request, html_path, data):

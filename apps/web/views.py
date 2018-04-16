@@ -7,10 +7,11 @@ def index(request):
     """分片上传"""
 
     if request.method == 'POST':
-        print("分片上传")
+        #print("分片上传")
         upload_file = request.FILES.get('file')
         real_file_name = upload_file._name
         chunk = request.POST.get('chunk', 0)
+        print("分片上传",chunk)
         filename = './file/%s%s' % (real_file_name, chunk)
         if not os.path.exists(filename):
             try:
@@ -25,6 +26,7 @@ def index(request):
 
 def upload_success(request):
     """所有分片上传成功"""
+    print("所有分片上传成功")
     ext = request.POST.get('ext', '')
     upload_type = request.POST.get('type')
     name = request.POST.get('name')
@@ -54,6 +56,8 @@ def list_exist(request):
     chunk = 0
     data = {}
     filename = "./file/%s" % name
+
+    #判断上传的文件是否存在
     if os.path.exists(filename):
         data['flag_exist'] = True
         data['file_path'] = filename
@@ -67,4 +71,5 @@ def list_exist(request):
             break
         chunk += 1
     data['list'] = list
+   # print('判断该文件上传了多少个分片',data)
     return ajax.ajax_data(data)
