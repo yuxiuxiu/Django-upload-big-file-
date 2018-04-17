@@ -12,6 +12,16 @@
 </head>
 
 <body>
+        <!-- List of uploaded documents -->
+        {% if documents %}
+            <ul>
+                {% for document in documents %}
+                    <li><a href="{{ document.docfile }}">{{ document.filename}}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No documents.</p>
+        {% endif %}
 <div>
     <div id="picker">请选择</div>   <!-- 上传按钮，必须指定id选择器的值 -->
     {#        {% csrf_token %}#}
@@ -81,7 +91,8 @@
                 }
             }
         );
-
+        var task_id = WebUploader.Base.guid();//产生task_id
+        console.log(task_id)
         var uploader = WebUploader.create({           //创建上传控件
             swf: 'https://cdn.bootcss.com/webuploader/0.1.1/Uploader.swf', //swf位置，这个可能与flash有关
             server: '/upload/',                 //接收每一个分片的服务器地址
@@ -90,11 +101,14 @@
             chunked: true,                            //是否分片
             chunkSize: 1024 * 1024,                  //每个分片的大小，这里为1M
             chunkRetry: 3,                            //某分片若上传失败，重试次数
-            threads: 10,                               //线程数量，考虑到服务器，这里就选了1
+            threads: 3,                               //线程数量，考虑到服务器，这里就选了3
             duplicate: true,                          //分片是否自动去重
+            formData: {//每次上传分片，一起携带的数据
+                task_id: task_id,
+            },
             prepareNextFile: true,                    // 上传本分片时预处理下一分片
-            fileNumLimit: 1,                            // 上传文件限制
-            fileSingleSizeLimit: 2 * 1024 * 1024 * 1024,       // 上传文件大小限制
+            fileNumLimit: 2,                            // 上传文件限制
+            fileSingleSizeLimit: 3 * 1024 * 1024 * 1024,       // 上传文件大小限制
 
         });
 
@@ -146,7 +160,7 @@
         //整个文件的所有分片都上传成功，调用该方法 // 要是auto=false的时候file 直接为source。 否则需要用file.source
         uploader.on('uploadSuccess', function (file) {
             //上传的信息（文件唯一标识符，文件后缀名）
-            var data = {'ext': file['ext'], 'name': file['name'], 'type': file.source['type']};
+            var data = {'task_id': task_id,'ext': file['ext'], 'name': file['name'], 'type': file.source['type']};
             $.post('/upload/success/', data, function (res) {
                 file_path = res;
                 alert(file_path);
